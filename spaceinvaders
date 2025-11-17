@@ -1,0 +1,63 @@
+int spaceshipX;
+int bulletX = -10;
+int bulletY = -10;
+boolean bulletFired = false;
+PImage img;
+int[] alienX = {50, 110, 170, 230, 290};
+int score = 0;
+boolean[] isAlive = {true, true, true, true, true};
+
+
+void setup() {
+  size(400, 400);
+  spaceshipX = width / 2;  // Start spaceship in the center
+}
+
+void draw() {
+  background(0);
+  fill(0, 255, 0);
+  rect(spaceshipX, height - 40, 40, 20);
+
+  fill(255, 0, 0);
+  for (int i = 0; i < 5; i++) {
+    if (isAlive[i]) {
+      rect(i * 60 + 50, 50, 40, 40);
+            text("score:" + score,0,10);
+      }
+  }
+  
+  // Draw and move bullet
+  if (bulletFired) {
+    fill(255);  // White bullet
+    rect(bulletX, bulletY, 5, 10);
+    bulletY -= 5;  // Move bullet up
+    
+                if (bulletY < 0) {
+            bulletFired = false;  // Reset bullet when goes off-screen
+          }
+    
+    for (int i = 0; i < 5; i++) {
+      if (isAlive[i]) {
+        if (bulletX > alienX[i] && bulletX < alienX[i] + 40 && bulletY > 50 && bulletY < 90) {
+          
+            isAlive[i] = false;
+            bulletFired = false;
+            score +=1;
+        }
+      }
+    }
+  }
+}
+void keyPressed() {
+  if (keyCode==LEFT && spaceshipX>0) {
+    spaceshipX -=10;
+  } else if (keyCode == RIGHT && spaceshipX <width-40) {
+    spaceshipX+=10;
+  } else if (key == ' ') {
+    if (!bulletFired) {
+      bulletFired=true;
+      bulletX=spaceshipX+20;
+      bulletY=height-40;
+    }
+  }
+}
